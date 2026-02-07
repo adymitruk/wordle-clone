@@ -59,9 +59,26 @@ const WORDS = [
   'youth', 'zones'
 ];
 
+// Shuffle array using Fisher-Yates algorithm
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 // Generate 10 years of daily words starting from today
 const START_DATE = new Date('2026-02-07T00:00:00-08:00'); // PST
 const DAYS = 365 * 10 + 3; // 10 years + 3 leap days
+
+// Create a pool of randomized words (repeat as needed to cover all days)
+const repeats = Math.ceil(DAYS / WORDS.length);
+const wordPool = [];
+for (let i = 0; i < repeats; i++) {
+  wordPool.push(...shuffle(WORDS));
+}
 
 const wordList = [];
 
@@ -70,7 +87,7 @@ for (let i = 0; i < DAYS; i++) {
   date.setDate(date.getDate() + i);
   
   const dateStr = date.toISOString().split('T')[0];
-  const word = WORDS[i % WORDS.length].toUpperCase();
+  const word = wordPool[i].toUpperCase();
   
   wordList.push({ date: dateStr, word });
 }
