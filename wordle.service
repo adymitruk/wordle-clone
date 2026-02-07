@@ -1,0 +1,16 @@
+[Unit]
+Description=Wordle Clone
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/apps.dymitruk.com/wordle
+Environment="NODE_ENV=production"
+Environment="PORT=3010"
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
