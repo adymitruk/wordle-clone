@@ -17,25 +17,19 @@ const KEYBOARD = [
 ];
 
 // Initialize game
-async function init() {
+function init() {
   try {
-    // Get pretendDate from URL if present
-    const urlParams = new URLSearchParams(window.location.search);
-    const pretendDate = urlParams.get('pretendDate');
+    // Read word from hidden field (injected by server)
+    targetWord = document.getElementById('target-word').value;
     
-    // Use relative path to work with BASE_PATH
-    const url = pretendDate ? `api/word?pretendDate=${pretendDate}` : 'api/word';
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.error) {
-      showMessage('Error loading word: ' + data.error, false);
+    if (!targetWord || targetWord === 'ERROR') {
+      showMessage('Error loading word', false);
       return;
     }
     
-    targetWord = data.word;
-    document.getElementById('target-word').value = targetWord;
-    document.getElementById('date').textContent = formatDate(data.date);
+    // Set date to today
+    const today = new Date();
+    document.getElementById('date').textContent = formatDate(today.toISOString().split('T')[0]);
     
     createBoard();
     createKeyboard();
