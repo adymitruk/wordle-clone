@@ -19,16 +19,6 @@ npm run generate  # Generate words (already done)
 npm start         # Start server on port 3000
 ```
 
-## Deployment
-
-Deploy to apps.dymitruk.com/wordle
-
-## Testing
-
-Access with pretendDate parameter:
-- `http://localhost:3000/?pretendDate=2026-02-15`
-- `http://apps.dymitruk.com/wordle/?pretendDate=2026-03-01`
-
 ## Tech Stack
 
 - Node.js + Express
