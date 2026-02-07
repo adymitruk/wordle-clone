@@ -23,7 +23,8 @@ async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     const pretendDate = urlParams.get('pretendDate');
     
-    const url = pretendDate ? `/api/word?pretendDate=${pretendDate}` : '/api/word';
+    // Use relative path to work with BASE_PATH
+    const url = pretendDate ? `api/word?pretendDate=${pretendDate}` : 'api/word';
     const response = await fetch(url);
     const data = await response.json();
     
