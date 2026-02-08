@@ -15,7 +15,6 @@ A clean Wordle implementation with 10 years of daily puzzles.
 
 ```bash
 npm install
-npm run generate  # Generate words (already done)
 npm start         # Start server on port 3000
 ```
 
