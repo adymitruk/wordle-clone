@@ -30,21 +30,27 @@ function getTodaysWord(pretendDate) {
   return entry || { word: 'ERROR', date: dateStr };
 }
 
-// Home page - render with today's word embedded (must be before static)
-app.get(BASE_PATH + '/', (req, res) => {
+// Handler function for both /wordle and /wordle/
+function handleHome(req, res) {
   const pretendDate = req.query.pretendDate;
   const { word, date } = getTodaysWord(pretendDate);
   
   let html = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
   
   // Inject word into hidden field
-  html = html.replace('id="target-word" value=""', `id="target-word" value="${word}"`);
+  html = html.replace(/id="target-word"([^>]*) value=""/, `id="target-word"$1 value="${word}"`);
   
   // Inject date
   html = html.replace('<p id="date"></p>', `<p id="date">${formatDate(date)}</p>`);
   
   res.send(html);
-});
+}
+
+// Home page - handle both with and without trailing slash
+if (BASE_PATH) {
+  app.get(BASE_PATH, handleHome);
+}
+app.get(BASE_PATH + '/', handleHome);
 
 function formatDate(dateStr) {
   const date = new Date(dateStr + 'T12:00:00-08:00'); // Noon PST to avoid timezone issues
