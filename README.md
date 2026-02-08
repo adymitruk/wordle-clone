@@ -5,8 +5,6 @@ A clean Wordle implementation with 10 years of daily puzzles.
 ## Features
 
 - 10 years of pre-generated daily words
-- Server timezone-aware (America/Los_Angeles)
-- Cheat mode for testing: `?pretendDate=2026-02-15`
 - Client-side game logic
 - Keyboard and click support
 - Responsive design
