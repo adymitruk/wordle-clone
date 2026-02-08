@@ -27,9 +27,7 @@ function init() {
       return;
     }
     
-    // Set date to today
-    const today = new Date();
-    document.getElementById('date').textContent = formatDate(today.toISOString().split('T')[0]);
+    // Date already injected by server, no need to set it here
     
     createBoard();
     createKeyboard();

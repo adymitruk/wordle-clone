@@ -11,14 +11,20 @@ const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'words.json'), 'ut
 
 // Get today's word based on server timezone (America/Los_Angeles)
 function getTodaysWord(pretendDate) {
-  let targetDate;
+  let dateStr;
+  
   if (pretendDate) {
-    targetDate = new Date(pretendDate + 'T00:00:00-08:00');
+    dateStr = pretendDate;
   } else {
-    targetDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    // Get current date in PST timezone
+    const now = new Date();
+    const pstDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const year = pstDate.getFullYear();
+    const month = String(pstDate.getMonth() + 1).padStart(2, '0');
+    const day = String(pstDate.getDate()).padStart(2, '0');
+    dateStr = `${year}-${month}-${day}`;
   }
   
-  const dateStr = targetDate.toISOString().split('T')[0];
   const entry = words.find(w => w.date === dateStr);
   
   return entry || { word: 'ERROR', date: dateStr };
@@ -34,8 +40,22 @@ app.get(BASE_PATH + '/', (req, res) => {
   // Inject word into hidden field
   html = html.replace('id="target-word" value=""', `id="target-word" value="${word}"`);
   
+  // Inject date
+  html = html.replace('<p id="date"></p>', `<p id="date">${formatDate(date)}</p>`);
+  
   res.send(html);
 });
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr + 'T12:00:00-08:00'); // Noon PST to avoid timezone issues
+  return date.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    timeZone: 'America/Los_Angeles'
+  });
+}
 
 // Static files (after root route)
 app.use(BASE_PATH, express.static(path.join(__dirname, 'public')));
